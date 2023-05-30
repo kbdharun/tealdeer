@@ -13,11 +13,14 @@ jobs:
     name: run tests
     strategy:
       matrix:
-        platform: [ubuntu-latest, macos-latest, windows-latest]
-        rust: ['1.62', stable]
+        platform: [ubuntu-latest, macos-latest, windows-latest, ubuntu-20.04]
+        toolchain: [1.62.0, stable]
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ matrix.version }}
       - name: Build with default features
         run: cargo build
       - name: Build with logging and webpki roots
@@ -28,12 +31,20 @@ jobs:
   clippy:
     runs-on: ubuntu-latest
     steps:
+       - uses: actions/checkout@v3
+       - uses: dtolnay/rust-toolchain@stable
+         with:
+           toolchain: ${{ matrix.version }}
        - name: run clippy lints
          run: cargo clippy --features logging
 
   fmt:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ matrix.version }}
       - name: run rustfmt
         run: cargo fmt --all -- --check
 
