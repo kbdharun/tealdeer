@@ -14,30 +14,13 @@ jobs:
     strategy:
       matrix:
         platform: [ubuntu-latest, macos-latest, windows-latest, ubuntu-20.04]
+        toolchain: [stable, 1.62.1]
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v3
       - uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: stable
-      - name: Build with default features
-        run: cargo build
-      - name: Build with logging and webpki roots
-        run: cargo build --features logging,webpki-roots --no-default-features
-      - name: Run tests
-        run: cargo test
-
-  test-version:
-    name: run tests for a specific rust version
-    strategy:
-      matrix:
-        platform: [ubuntu-latest, macos-latest, windows-latest, ubuntu-20.04]
-    runs-on: ${{ matrix.platform }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: 1.62
+          toolchain: ${{ matrix.toolchain }}
       - name: Build with default features
         run: cargo build
       - name: Build with logging and webpki roots
